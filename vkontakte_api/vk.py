@@ -1,13 +1,14 @@
 import datetime
 import time
-
 import requests
 from pprint import pprint
 import os
 
+from abc import ABC, abstractmethod
 
-class Vkontakte:
-    TOKEN_VK = os.environ.get("TOKEN_VK", '')
+
+class BaseVkontakte(ABC):
+    TOKEN_VK = os.environ.get("TOKEN_VK", 'ce5a37f2be02ca1c567cffdfec4dc2b4b9d8526ec313cf2aece578ea05b98d54c585c556c76a0c6942d69')
     BASE_URL = 'https://api.vk.com/method/{}?{}&v=5.52&access_token={}'
     TIME_OUT = 3
 
@@ -23,6 +24,7 @@ class Vkontakte:
         try_connection = 3
         while try_connection:
             try:
+                # todo: universal get
                 response = requests.get(self.BASE_URL.format(method, id, token), params={
                     "count": 10,
                     "offset": offset
@@ -36,6 +38,16 @@ class Vkontakte:
                 return response
         else:
             raise requests.exceptions.ConnectionError(f'Max retries exceeded with url: {self.BASE_URL.format(method, id, token)}')
+
+    @abstractmethod
+    def get_last_publications(self, *args, **kwargs):
+        pass
+
+
+class PublicationWallVK(BaseVkontakte):
+    """
+    Класс публикаций на стене
+    """
 
     # 568250150
     def get_last_publications(self, method, id, token):
@@ -81,5 +93,5 @@ class Vkontakte:
         return has_next, offset
 
 
-vk = Vkontakte()
+vk = PublicationWallVK()
 vk.get_last_publications('wall.get', 'owner_id=568250150', vk.TOKEN_VK)
