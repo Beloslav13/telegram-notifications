@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  app:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      command:
+        - /bin/bash
+        - '-c'
+        - sleep 1d
+      volumes:
+        - .:/app
+      ports:
+        - 8000:8000
+      env_file:
+        - .env
