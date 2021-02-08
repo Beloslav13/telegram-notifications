@@ -35,10 +35,13 @@ class Vkontakte:
         result = []
         while has_next:
             try:
+                # todo: const time sleep
+                time.sleep(3)
                 items = self.get_data(method, id, token, offset=offset)
             except requests.exceptions.ConnectionError as exc:
                 print(f'Error: {exc}')
             else:
+                # todo: refactor in method
                 if not items['response']['items']:
                     break
 
