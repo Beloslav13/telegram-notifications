@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 
 class BaseVkontakte(ABC):
-    TOKEN_VK = os.environ.get("TOKEN_VK", 'ce5a37f2be02ca1c567cffdfec4dc2b4b9d8526ec313cf2aece578ea05b98d54c585c556c76a0c6942d69')
+    TOKEN_VK = os.environ.get("TOKEN_VK", '')
     BASE_URL = 'https://api.vk.com/method/{}?{}&v=5.52&access_token={}'
     TIME_OUT = 3
 
