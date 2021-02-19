@@ -9,7 +9,7 @@ class VkontaktePublication:
     Класс публикаций Вконтакте
     """
 
-    def __init__(self, id):
+    def __init__(self, id: str):
         self.id = id
         self.request = RequestVkontakte(url=BASE_URL, id=id, token=TOKEN_VK)
         self.publications = ParsePublication()

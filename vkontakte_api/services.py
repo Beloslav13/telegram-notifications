@@ -1,4 +1,6 @@
 import time
+from typing import Dict
+
 import requests
 
 from utils import RequestGet, ParseData
@@ -54,7 +56,7 @@ class ParsePublication(ParseData):
     Реализация базового интерфейса парсинга данных Вконтакте
     """
 
-    def parse(self, items):
+    def parse(self, items: Dict[str, dict]):
         return f"Реализация парсинга данных...{items}"
 
     # todo: refactor
