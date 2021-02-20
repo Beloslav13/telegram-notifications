@@ -12,9 +12,9 @@ class VkontaktePublication:
     def __init__(self, id: str):
         self.id = id
         self.request = RequestVkontakte(url=BASE_URL, id=id, token=TOKEN_VK)
-        self.publications = ParsePublication()
+        self.publications = ParsePublication(request=self.request)
 
 
 vk = VkontaktePublication(ID)
-resp = vk.request.get()
-pprint(vk.publications.parse(resp))
+print(vk.request.get())
+pprint(vk.publications.parse())

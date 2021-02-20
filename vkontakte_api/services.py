@@ -1,9 +1,11 @@
+import datetime
 import time
 from typing import Dict
 
 import requests
 
 from utils import RequestGet, ParseData
+from vkontakte_api.config import BASE_URL, TOKEN_VK, TIME_OUT
 
 
 class RequestVkontakte(RequestGet):
@@ -56,48 +58,43 @@ class ParsePublication(ParseData):
     Реализация базового интерфейса парсинга данных Вконтакте
     """
 
-    def parse(self, items: Dict[str, dict]):
-        return f"Реализация парсинга данных...{items}"
+    def __init__(self, request: RequestVkontakte):
+        self.request = request
 
-    # todo: refactor
-    # def get_last_publications(self, method, id, token):
-    #     """
-    #     Получить последнии публикации за последнии 15 минут.
-    #     :return: список публикаций: [{item1}, {item2}, ..., ...,]
-    #     """
-    #     offset = 0
-    #     has_next = True
-    #     result = []
-    #     while has_next:
-    #         try:
-    #             time.sleep(self.TIME_OUT)
-    #             items = self.make_request(method, id, token, offset=offset)
-    #         except requests.exceptions.ConnectionError as exc:
-    #             print(f'Error: {exc}')
-    #         else:
-    #             # Отсекаем сразу ненужные публикации
-    #             if not items['response']['items']:
-    #                 break
-    #             has_next, offset = self._parse_publications(has_next, items, offset, result)
-    #
-    # @staticmethod
-    # def _parse_publications(has_next, items, offset, result):
-    #     for item in items['response']['items']:
-    #         if 'is_pinned' in item or 'copy_history' in item:
-    #             continue
-    #         print(item)
-    #         collect_data = {}
-    #         created_at = datetime.datetime.fromtimestamp(item['date'])
-    #         if created_at >= datetime.datetime.now() - datetime.timedelta(minutes=15):
-    #             collect_data['id'] = item['id']
-    #             collect_data['created_at'] = str(created_at)
-    #             collect_data['text'] = item['text']
-    #             result.append(collect_data)
-    #         else:
-    #             print('break')
-    #             has_next = False
-    #             break
-    #     offset += 10
-    #     print(result)
-    #     print()
-    #     return has_next, offset
+    def parse(self):
+        offset = 0
+        has_next = True
+        result = []
+        while has_next:
+            try:
+                time.sleep(TIME_OUT)
+                items = self.request.get(offset=offset)
+            except requests.exceptions.ConnectionError as exc:
+                print(f'Error: {exc}')
+            else:
+                # Отсекаем сразу ненужные публикации
+                if not items['response']['items']:
+                    break
+                has_next, offset = self._parse_publications(has_next, items, offset, result)
+
+    @staticmethod
+    def _parse_publications(has_next, items, offset, result):
+        for item in items['response']['items']:
+            if 'is_pinned' in item or 'copy_history' in item:
+                continue
+            print(item)
+            collect_data = {}
+            created_at = datetime.datetime.fromtimestamp(item['date'])
+            if created_at >= datetime.datetime.now() - datetime.timedelta(minutes=15):
+                collect_data['id'] = item['id']
+                collect_data['created_at'] = str(created_at)
+                collect_data['text'] = item['text']
+                result.append(collect_data)
+            else:
+                print('break')
+                has_next = False
+                break
+        offset += 10
+        print(result)
+        print()
+        return has_next, offset
