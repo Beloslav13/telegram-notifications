@@ -70,7 +70,7 @@ class ParsePublication(ParseData):
         :return: [{pub1: 1}, {pub2}: 2, ..., ...]
         """
         if to_date is None:
-            date = datetime.datetime.now() - datetime.timedelta(minutes=15)
+            to_date = datetime.datetime.now() - datetime.timedelta(minutes=15)
 
         offset = 0
         has_next = True
