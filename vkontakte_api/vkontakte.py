@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from vkontakte_api.config import BASE_URL, ID, TOKEN_VK
@@ -16,5 +17,5 @@ class VkontaktePublication:
 
 
 vk = VkontaktePublication(ID)
-print(vk.request.get())
-pprint(vk.publications.parse())
+to_date = datetime.datetime(2020, 10, 10)
+pprint(len(vk.publications.parse()))
