@@ -1,5 +1,9 @@
 import datetime
 from pprint import pprint
+from threading import Thread
+from time import sleep
+
+import schedule as schedule
 
 from vkontakte_api.config import BASE_URL, ID, TOKEN_VK
 from vkontakte_api.services import RequestVkontakte, ParsePublication
@@ -15,7 +19,27 @@ class VkontaktePublication:
         self.request = RequestVkontakte(url=BASE_URL, id=id, token=TOKEN_VK)
         self.publications = ParsePublication(request=self.request)
 
+    def get_publications(self, to_date=''):
+        """Возвращает публикации со стены пользователя либо сообщества."""
+        return self.publications.parse(to_date)
 
-vk = VkontaktePublication(ID)
-to_date = datetime.datetime(2020, 10, 10)
-pprint(len(vk.publications.parse()))
+
+if __name__ == '__main__':
+    vk = VkontaktePublication(ID)
+    to_date = datetime.datetime(2020, 10, 10)
+    # pprint(len(vk.publications.parse()))
+    print(vk.get_publications())
+
+
+    def scheduler():
+        schedule.every(5).seconds.do(vk.get_publications)
+
+        while True:
+            schedule.run_pending()
+            sleep(3)  # Выберите оптимальное значение под свои задачи планировщика
+
+
+    t = Thread(target=scheduler)
+    t.start()
+    print('-------------')
+    print('WOW')
