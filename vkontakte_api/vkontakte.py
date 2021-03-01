@@ -30,16 +30,3 @@ if __name__ == '__main__':
     # pprint(len(vk.publications.parse()))
     print(vk.get_publications())
 
-
-    def scheduler():
-        schedule.every(5).seconds.do(vk.get_publications)
-
-        while True:
-            schedule.run_pending()
-            sleep(3)  # Выберите оптимальное значение под свои задачи планировщика
-
-
-    t = Thread(target=scheduler)
-    t.start()
-    print('-------------')
-    print('WOW')
