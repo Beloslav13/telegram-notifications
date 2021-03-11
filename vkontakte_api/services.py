@@ -1,11 +1,9 @@
 import datetime
 import time
-from typing import Dict
-
 import requests
 
 from utils import RequestGet, ParseData
-from vkontakte_api.config import BASE_URL, TOKEN_VK, TIME_OUT
+from vkontakte_api.config import TIME_OUT
 
 
 class RequestVkontakte(RequestGet):
@@ -69,7 +67,7 @@ class ParsePublication(ParseData):
         :param to_date: datetime.datetime
         :return: [{pub1: 1}, {pub2}: 2, ..., ...]
         """
-        if to_date is None:
+        if to_date is None or not to_date:
             to_date = datetime.datetime.now() - datetime.timedelta(minutes=15)
 
         offset = 0

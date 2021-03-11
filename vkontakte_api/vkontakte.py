@@ -1,9 +1,4 @@
 import datetime
-from pprint import pprint
-from threading import Thread
-from time import sleep
-
-import schedule as schedule
 
 from vkontakte_api.config import BASE_URL, ID, TOKEN_VK
 from vkontakte_api.services import RequestVkontakte, ParsePublication
@@ -27,6 +22,5 @@ class VkontaktePublication:
 if __name__ == '__main__':
     vk = VkontaktePublication(ID)
     to_date = datetime.datetime(2020, 10, 10)
-    # pprint(len(vk.publications.parse()))
-    print(vk.get_publications())
+    print(vk.get_publications(to_date))
 
