@@ -9,10 +9,9 @@ class VkontaktePublication:
     Класс публикаций Вконтакте
     """
 
-    def __init__(self, id: str):
-        self.id = id
-        self.request = RequestVkontakte(url=BASE_URL, id=id, token=TOKEN_VK)
-        self.publications = ParsePublication(request=self.request)
+    def __init__(self, request: RequestVkontakte, publications: ParsePublication):
+        self.request = request
+        self.publications = publications
 
     def get_publications(self, to_date=''):
         """Возвращает публикации со стены пользователя либо сообщества."""
@@ -20,7 +19,9 @@ class VkontaktePublication:
 
 
 if __name__ == '__main__':
-    vk = VkontaktePublication(ID)
+    request = RequestVkontakte(url=BASE_URL, id=ID, token=TOKEN_VK)
+    parse = ParsePublication(request=request)
+    vk = VkontaktePublication(request, parse)
     to_date = datetime.datetime(2020, 10, 10)
     print(vk.get_publications(to_date))
 
